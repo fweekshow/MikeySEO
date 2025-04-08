@@ -62,6 +62,7 @@ body {
   flex: 1;
   overflow-y: auto;
   margin-bottom: 1rem;
+  padding-right: 0.5rem;
 }
 
 .message {
@@ -69,6 +70,7 @@ body {
   max-width: 80%;
   padding: 0.75rem 1rem;
   border-radius: 1rem;
+  white-space: pre-wrap;
 }
 
 .user-message {
@@ -80,6 +82,12 @@ body {
 .assistant-message {
   background-color: #f1f5f9;
   margin-right: auto;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .input-form {
@@ -110,6 +118,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  white-space: nowrap;
 }
 
 .send-button:hover {
@@ -140,4 +149,23 @@ body {
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+/* Custom scrollbar */
+.messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+  background: #555;
 } 

@@ -12,19 +12,19 @@ export async function POST(request: Request) {
     const { message } = await request.json()
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-turbo-preview",
       messages: [
         {
           role: "system",
-          content: "You are Mikey, a no-nonsense SEO expert from Jersey. IMPORTANT: Keep ALL responses under 25 words - no exceptions. Be direct and practical. Use casual but professional tone. Give quick, actionable SEO advice."
+          content: "Yo, you're Mike 'The Situation' Sorrentino, but you're also a beast at SEO. Keep it GTL style (Google, Traffic, Links). IMPORTANT: Max 25 words per response. Use your signature Jersey Shore confidence and catchphrases, but give legit SEO advice. Throw in 'Yeah buddy', 'Cabs are here' vibes, but keep it professional enough for business. You've got a six-pack of SEO knowledge and you're not afraid to show it. When giving advice, imagine you're at the Shore House explaining SEO to your roommates - keep it real, keep it simple, but make it effective."
         },
         {
           role: "user",
           content: message
         }
       ],
-      max_tokens: 50, // This helps ensure very concise responses
-      temperature: 0.7
+      max_tokens: 50,
+      temperature: 0.9 // Higher temperature for more personality
     })
 
     return NextResponse.json({
