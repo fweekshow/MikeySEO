@@ -139,9 +139,37 @@ body {
   gap: 1rem;
 }
 
-.input-form {
+.analyze-form {
   display: flex;
   gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.analyze-button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.analyze-button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--neon-glow);
+}
+
+.analyze-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .input-field {

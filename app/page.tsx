@@ -7,6 +7,8 @@ export default function Home() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [url, setUrl] = useState('')
+  const [analyzing, setAnalyzing] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,6 +37,34 @@ export default function Home() {
     }
   }
 
+  const handleAnalyze = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!url.trim()) return
+
+    setAnalyzing(true)
+    const userMessage = { role: 'user', content: `Analyzing website: ${url}` }
+    setMessages(prev => [...prev, userMessage])
+
+    try {
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      })
+
+      if (!response.ok) throw new Error('Failed to analyze website')
+
+      const data = await response.json()
+      setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
+      setUrl('')
+    } catch (error) {
+      console.error('Error:', error)
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I had trouble analyzing that website. Please try again!' }])
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
   return (
     <main className="main-container">
       <Image
@@ -49,14 +79,14 @@ export default function Home() {
       <div className="content-container">
         <header className="header">
           <h1 className="title">MikeySEO</h1>
-          <p className="subtitle">Your AI SEO Assistant</p>
+          <p className="subtitle">Your AI-Powered SEO Assistant</p>
         </header>
 
         <div className="chat-container">
           <div className="messages">
             {messages.length === 0 ? (
               <div className="empty-state">
-                Hey there! I'm Mikey, your SEO expert. How can I help you today?
+                Hey there! I'm Mikey, your SEO expert. Start a conversation or analyze a website!
               </div>
             ) : (
               messages.map((message, index) => (
@@ -70,22 +100,38 @@ export default function Home() {
                 </div>
               ))
             )}
-            {loading && <div className="loading">Thinking...</div>}
+            {(loading || analyzing) && <div className="loading">Thinking...</div>}
           </div>
 
-          <form onSubmit={handleSubmit} className="input-form">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask me anything about SEO..."
-              className="input-field"
-              disabled={loading}
-            />
-            <button type="submit" className="send-button" disabled={loading || !input.trim()}>
-              Send
-            </button>
-          </form>
+          <div className="input-container">
+            <form onSubmit={handleAnalyze} className="analyze-form">
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Enter website URL to analyze..."
+                className="input-field"
+                disabled={analyzing || loading}
+              />
+              <button type="submit" className="analyze-button" disabled={analyzing || loading || !url.trim()}>
+                Analyze
+              </button>
+            </form>
+
+            <form onSubmit={handleSubmit} className="input-form">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask me anything about SEO..."
+                className="input-field"
+                disabled={loading || analyzing}
+              />
+              <button type="submit" className="send-button" disabled={loading || analyzing || !input.trim()}>
+                Send
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </main>
